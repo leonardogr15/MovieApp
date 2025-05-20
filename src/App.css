@@ -1,0 +1,197 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 1rem;
+  margin: 0;
+}
+
+input {
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}
+
+button {
+  padding: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  max-width: 150px;
+  text-align: center;
+}
+
+img {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.search-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.search-bar {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 600px;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.search-bar select {
+  padding: 0.4rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.search-bar button {
+  padding: 0.5rem 1rem;
+  background-color: #007aff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+}
+
+.search-results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.movie-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  width: 180px;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.movie-card:hover {
+  transform: scale(1.03);
+}
+
+.movie-card img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.movie-card button {
+  margin-top: auto;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  width: 100%;
+  border-radius: 6px;
+}
+
+.App {
+  position: relative;
+  padding-left: 1rem;
+}
+
+header {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+main {
+  margin: 1rem;
+}
+
+
+.hamburger {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 100;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: 200px;
+  height: 100%;
+  background: #fff;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  padding: 4rem 1rem;
+  display: flex;
+  flex-direction: column;
+  transition: left 0.3s ease-in-out;
+  z-index: 90;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar button {
+  margin-bottom: 1rem;
+  text-align: left;
+  background-color: #e0e0e0;
+  color: #333;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar button:hover {
+  background-color: #c0c0c0;
+}
+
+.toast {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  color: white;
+  padding: 0.75rem 1.25rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 200;
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
+}
+
+.toast--success {
+  background-color: #28a745;
+}
+
+.toast--error {
+  background-color: #dc3545;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
