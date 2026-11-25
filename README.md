@@ -1,36 +1,65 @@
-Decisiones tecnicas clave
-    1- separación de MovieForm, SearchBar, MovieList y Toast para mantener claridad de responsabilidades
-    2- hooks useState y useEffect para sincronizar con localStorage sin librerias adicionales
-    3- el uso de dos colecciones en localStorage, son all-movies y fav-ids (IDS de favoritos), garantizando la distincion de las busquedas
-    4- menu lateral hecho con HTML/CSS para evitar dependencias de UI
-    5- validación de duplicados por título y año
+# MovieApp
 
-Que mejoraria con mas tiempo
-    1- Añadir edicion de películas ya guardadas
-    2- Implementar paginación y búsqueda avanzada con debounce
-    3- Incluir animaciones más complejas
-    4- Extraer lógica de hooks para reutilización y limpieza
+A small React + TypeScript app to search movies on [TMDB](https://www.themoviedb.org/), keep a list of
+favourites and add movies by hand. Everything is stored in the browser (`localStorage`); there is no
+backend. *Versión en español: [README.es.md](README.es.md).*
 
+## Features
 
-Cómo ejecutar el proyecto localmente
+- Search TMDB by title, or browse popular movies when the search box is empty.
+- Sort by title or year, ascending or descending.
+- Add movies to favourites, or create them manually; duplicates (same title and year) are rejected.
+- Favourites and custom movies persist in `localStorage` (`all-movies` and `fav-ids`).
+- Clear messages when the TMDB key is missing or TMDB cannot be reached; saved movies stay available.
 
-    1- Clona el repositorio:
-        1.1- git clone https://github.com/leonardogr15/MovieApp.git
-        1.2- cd react-movie-app
+## Tech stack
 
-    2- Instala las dependencias:
-        2.1- npm install
+React 19, TypeScript, Axios, Create React App (`react-scripts` 5), Jest and React Testing Library.
 
-    3- Inicia el servidor de desarrollo:
-        3.1- npm run dev
-        3.2- Abre tu navegador en http://localhost:3000
+## Setup
 
+Requirements: Node.js 18 or newer and your own TMDB API key
+([TMDB settings → API](https://www.themoviedb.org/settings/api)).
 
+```bash
+git clone https://github.com/leonardogr15/MovieApp.git
+cd MovieApp
+npm ci
+cp .env.example .env        # then set REACT_APP_TMDB_API_KEY in .env
+npm start                   # http://localhost:3000
+```
 
-Reflexión
+`.env` is ignored by git; never commit it. Without a key the app still opens and shows how to
+configure one.
 
-Actualmente la principal limitante que presente fue respecto al tiempo, pero React permitio avanzar muy rapido debido a su forma de dividir la interfaz en componentes pequeños y reutilizables permitió avanzar muy rápido.
+## Tests
 
-No represento un desafío entender la API de TMDB debido a que su informacion fue muy clara, pero organizar el flujo (buscador, formulario, lista de favoritas) y la sincronización con localStorage sin el uso de librerías externas. Gracias a los hooks y a la composición de componentes, pude montar la logica de favoritos y notificaciones.
+```bash
+CI=true npm test
+```
 
-Para que el proyecto siga creciendo, me gustaría extraer la persistencia en un useLocalStorage, añadir validaciones mas sólidas y un sistema de pruebas simples. Pero, sobre todo, quedo emocionado de que React, permite prototipar funciones complejas de forma rapido debido a que usualmente en mi ambiente laboral realizaba personalizaciones y correcciones mas sencillas sobre una app ya estructurada.
+The tests mock Axios, so they never call TMDB: requests are refused without a key, request
+parameters and result mapping are checked, and the search bar shows the right message for a missing
+key or a failed request.
+
+## API key
+
+**Create React App copies every `REACT_APP_*` variable into the JavaScript bundle at build time.** Any
+key configured this way is public: anyone can read it from the deployed site with the browser's
+developer tools. TMDB keys cannot be restricted to a domain.
+
+- For local development, use your own key and rotate it if it is ever shared.
+- Before deploying, keep the key on a server: a small proxy (for example a serverless function)
+  that receives `/search?query=…` and `/popular`, adds the key from a server-side environment
+  variable and forwards the request to TMDB. The frontend then calls the proxy and never sees the key.
+  This proxy is not implemented yet.
+
+A key was committed to this repository in its first version. It has been removed from the tree, but
+it remains in the git history and is treated as compromised: it must be revoked in the TMDB account.
+
+## Known limitations
+
+- Create React App is no longer maintained and `npm audit` reports issues in its build toolchain;
+  moving to Vite would remove them.
+- No server-side proxy yet (see "API key").
+- Data lives only in the browser's `localStorage`.
