@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { searchMovies, fetchPopularMovies } from "../utils/tmdb";
+import { searchMovies, fetchPopularMovies, MissingApiKeyError } from "../utils/tmdb";
 import { Movie } from "../types/Movie";
 import "../App.css";
 
@@ -14,6 +14,7 @@ export default function SearchBar({ onAdd, allMovies, favIds }: Props) {
     const [apiResults, setApiResults] = useState<Movie[]>([]);
     const [sortBy, setSortBy]   = useState<"title"|"year">("title");
     const [sortOrder, setSortOrder] = useState<"asc"|"desc">("asc");
+    const [error, setError] = useState("");
 
     const sortFn = (list: Movie[]) =>
         [...list].sort((a,b) => {
@@ -25,10 +26,19 @@ export default function SearchBar({ onAdd, allMovies, favIds }: Props) {
         });
 
     const handleSearch = useCallback(async () => {
-        const data = query.trim()
-        ? await searchMovies(query)
-        : await fetchPopularMovies();
-        setApiResults(data);
+        try {
+            const data = query.trim()
+            ? await searchMovies(query)
+            : await fetchPopularMovies();
+            setApiResults(data);
+            setError("");
+        } catch (err) {
+            // Saved movies stay visible; only the TMDB results are missing.
+            setApiResults([]);
+            setError(err instanceof MissingApiKeyError
+                ? "Falta configurar la clave de TMDB (REACT_APP_TMDB_API_KEY). Consulta el README."
+                : "No se pudieron cargar películas de TMDB. Inténtalo de nuevo más tarde.");
+        }
     }, [query]);
 
     useEffect(() => { handleSearch(); }, [handleSearch]);
@@ -56,6 +66,8 @@ export default function SearchBar({ onAdd, allMovies, favIds }: Props) {
 
             <input placeholder="Buscar..." value={query} onChange={e=>setQuery(e.target.value)}/>
         </form>
+
+        {error && <p role="alert" className="search-error">{error}</p>}
 
         <div className="search-results">
             {displayList.map(movie => (
